@@ -24,9 +24,8 @@ public class Thread implements Runnable {
             // Performs the filtering task using its assigned pathSymbol.
             filterHandler.doFilter(pathSymbol);
         } catch (IOException e) {
-            // In a real environment, IOException should be handled more appropriately.
-            // (e.g., notify via resultHandler)
-            e.printStackTrace();
+
+            config.getResultHandler().onError(pathSymbol, e);
         }
     }
 }

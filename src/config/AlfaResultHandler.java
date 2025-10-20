@@ -17,4 +17,14 @@ public interface AlfaResultHandler {
     default void onBatchComplete(List<String> filteredLines) {
         System.out.println("Batch processing done. Found " + filteredLines.size() + " lines.");
     }
+
+    /**
+     * (Optional) Method called when an error occurs during log processing.
+     * @param pathSymbol The path symbol of the file that caused the error (e.g., "APP_LOG")
+     * @param e The exception object that occurred
+     */
+    default void onError(String pathSymbol, Exception e) {
+        System.err.println("[AlfaAgent] Error processing path: " + pathSymbol);
+        e.printStackTrace();
+    }
 }
