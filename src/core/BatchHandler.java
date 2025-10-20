@@ -36,6 +36,7 @@ public class BatchHandler {
         if (scheduler != null && !scheduler.isShutdown()) {
             scheduler.shutdown();
         }
+        threadHandler.closeTasks();
     }
 
     /**

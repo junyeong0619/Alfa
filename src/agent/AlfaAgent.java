@@ -56,6 +56,10 @@ public class AlfaAgent {
             return;
         }
 
+        System.out.println("[AlfaAgent] Initializing tasks and file resources...");
+        threadHandler.initializeTasks();
+        System.out.println("[AlfaAgent] Initialization complete.");
+
         System.out.println("[AlfaAgent] Starting agent (indefinite execution)...");
         batchHandler.startBatchProcessing();
         isRunning = true;
@@ -80,6 +84,10 @@ public class AlfaAgent {
             System.err.println("[AlfaAgent] Path verification failed: " + e.getMessage());
             return;
         }
+
+        System.out.println("[AlfaAgent] Initializing tasks and file resources...");
+        threadHandler.initializeTasks();
+        System.out.println("[AlfaAgent] Initialization complete.");
 
         Runnable onStopCallback = () -> {
             this.isRunning = false;

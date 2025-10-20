@@ -2,6 +2,7 @@ package core;
 
 import config.AlfaConfig;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -9,22 +10,36 @@ import java.util.Set;
 public class ThreadHandler {
 
     // The threads list holds core.Thread (Runnable) objects.
-    private List<LogFilterTask> threads = new ArrayList<>();
+    private List<LogFilterTask> tasks = new ArrayList<>();
     private AlfaConfig config;
 
     public ThreadHandler(AlfaConfig config) {
         this.config = config;
+    }
+
+    public void initializeTasks() {
         Set<String> absPathSymbols = config.getAbsPathSymbols();
 
-        // For every configured file path (symbol)
         for (String symbol : absPathSymbols) {
-            // Create a core.Thread (Runnable) object (modified in step 1) and add it to the list.
-            threads.add(new LogFilterTask(config, symbol));
+            try {
+                FilterHandler handler = new FilterHandler(config, symbol);
+
+                tasks.add(new LogFilterTask(config, symbol, handler));
+
+            } catch (IOException e) {
+                config.getResultHandler().onError(symbol, e);
+            }
         }
     }
 
     // Add a getter so that external classes (e.g., BatchHandler) can retrieve the list of tasks.
     public List<LogFilterTask> getRunnableTasks() {
-        return threads;
+        return tasks;
+    }
+
+    public void closeTasks() {
+        for (LogFilterTask task : tasks) {
+            task.close();
+        }
     }
 }
