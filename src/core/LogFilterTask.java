@@ -24,7 +24,7 @@ public class LogFilterTask implements Runnable {
         try {
             List<String> filteredLines = filterHandler.doFilter();
 
-            config.getResultHandler().onBatchComplete(filteredLines);
+            config.getResultHandler().onBatchComplete(filteredLines, pathSymbol);
 
         } catch (Exception e) {
             config.getResultHandler().onError(pathSymbol, e);

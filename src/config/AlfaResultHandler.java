@@ -14,8 +14,8 @@ public interface AlfaResultHandler {
      * (Optional) Method that can be called when batch processing is complete.
      * @param filteredLines The list of all log lines filtered in this batch.
      */
-    default void onBatchComplete(List<String> filteredLines) {
-        System.out.println("Batch processing done. Found " + filteredLines.size() + " lines.");
+    default void onBatchComplete(List<String> filteredLines,String symbol) {
+        System.out.println(symbol+": Batch processing done. Found " + filteredLines.size() + " lines.");
     }
 
     /**
