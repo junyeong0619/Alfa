@@ -1,6 +1,7 @@
 package config;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class AlfaConfig {
 
@@ -22,8 +23,8 @@ public class AlfaConfig {
 
     // in FilterHandler it will be used by filtering log.
     private Map<String,Set<String>> filterOpts;
-
-    private final Map<String, Long> lastReadPositions = new HashMap<>();
+    
+    private final Map<String, Long> lastReadPositions = new ConcurrentHashMap<>();
 
     public AlfaConfig(AlfaResultHandler resultHandler, Map<String, String> absPaths,
                       Map<String, Set<String>> filterOpts, Integer batchTime, Integer threadPoolSize) {
