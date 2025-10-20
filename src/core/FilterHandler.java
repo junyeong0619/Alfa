@@ -3,6 +3,7 @@ package core;
 import config.AlfaConfig;
 
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -15,22 +16,46 @@ public class FilterHandler {
         this.config = config;
     }
 
+
     public List<String> doFilter(String pathSymbol) throws IOException {
         List<String> filteredLines = new ArrayList<>();
         String path = config.getAbsPaths().get(pathSymbol);
         if(path == null){
             throw new RuntimeException("Path not found");
         }
-        List<String> lines = Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8);
-        Set<String> filterOpts = config.getFilterOpts().get(pathSymbol);
-        for(String line : lines){
-            for (String option : filterOpts) {
-                if(line.contains(option)){
-                    filteredLines.add(line);
-                    config.getResultHandler().onLogFiltered(line, option);
+
+       //get last read point from AlfaConfig
+        Map<String, Long> positions = config.getLastReadPositions();
+        long startPosition = positions.getOrDefault(pathSymbol, 0L);
+
+        try (RandomAccessFile raf = new RandomAccessFile(path, "r")) { // 'r' 모드 사용
+
+            //move the file pointer to the last point
+            raf.seek(startPosition);
+
+            String line;
+
+
+            while ((line = raf.readLine()) != null) {
+
+                Set<String> filterOpts = config.getFilterOpts().get(pathSymbol);
+                if (filterOpts != null) {
+                    for (String option : filterOpts) {
+                        if (line.contains(option)) {
+                            filteredLines.add(line);
+                            config.getResultHandler().onLogFiltered(line, option);
+                            break;
+                        }
+                    }
                 }
             }
+
+            //update last read point
+            long currentPosition = raf.getFilePointer();
+            positions.put(pathSymbol, currentPosition);
+
         }
+
         return filteredLines;
     }
 

@@ -23,6 +23,8 @@ public class AlfaConfig {
     // in FilterHandler it will be used by filtering log.
     private Map<String,Set<String>> filterOpts;
 
+    private final Map<String, Long> lastReadPositions = new HashMap<>();
+
     public AlfaConfig(AlfaResultHandler resultHandler, Map<String, String> absPaths,
                       Map<String, Set<String>> filterOpts, Integer batchTime, Integer threadPoolSize) {
         this.resultHandler = resultHandler;
@@ -35,6 +37,10 @@ public class AlfaConfig {
         if (threadPoolSize != null) {
             this.threadPoolSize = threadPoolSize;
         }
+    }
+
+    public Map<String, Long> getLastReadPositions() {
+        return lastReadPositions;
     }
 
     public AlfaResultHandler getResultHandler() {
