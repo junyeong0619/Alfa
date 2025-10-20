@@ -96,3 +96,43 @@ AlfaAgent agent = new AlfaAgent(config);
 ```java
 agent.stop();
 ```
+
+
+네, `.jar` 파일을 라이브러리로 사용하는 방법을 설명하는 `Readme.md` 섹션을 작성했습니다.
+
+기존 `Readme.md`의 "2. 에이전트 실행 및 중지" 섹션 다음에 이 내용을 추가하면 됩니다.
+
+-----
+
+### 3\. 라이브러리로 사용하기 (.jar)
+
+Alfa Agent는 `.jar` 파일 형태의 라이브러리로 패키징되어 다른 Java 애플리케이션에 포함되어 사용될 수 있습니다.
+
+#### 3.1. .jar 파일 프로젝트에 추가하기
+
+생성된 `alfa-agent-1.0.jar` (또는 유사한 이름의) 파일을 애플리케이션 프로젝트에 추가해야 합니다.
+
+**방법 1: IDE에서 직접 추가 (예: IntelliJ)**
+
+1.  프로젝트 루트에 `lib` 폴더를 만듭니다.
+2.  `alfa-agent-1.0.jar` 파일을 `lib` 폴더에 복사합니다.
+3.  IntelliJ의 프로젝트 뷰에서 `.jar` 파일을 우클릭한 뒤, \*\*"Add as Library..."\*\*를 선택합니다.
+
+**방법 2: 빌드 도구 사용 (예: Gradle)**
+
+1.  프로젝트 루트에 `libs` 폴더를 만들고 `.jar` 파일을 복사합니다.
+
+2.  `build.gradle` (또는 `build.gradle.kts`) 파일의 `dependencies` 블록에 다음 라인을 추가합니다.
+
+    ```groovy
+    dependencies {
+        // ... 다른 의존성들
+        implementation files('libs/alfa-agent-1.0.jar')
+    }
+    ```
+
+#### 3.2. 라이브러리 사용 예시
+
+라이브러리가 추가되면, 애플리케이션의 `Main` 클래스 등에서 `AlfaAgent`를 직접 임포트하여 사용할 수 있습니다.
+
+
