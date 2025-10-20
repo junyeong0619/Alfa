@@ -2,8 +2,8 @@ package core;
 
 import config.AlfaConfig;
 
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class FilterHandler {
@@ -25,7 +25,10 @@ public class FilterHandler {
         Map<String, Long> positions = config.getLastReadPositions();
         long startPosition = positions.getOrDefault(pathSymbol, 0L);
 
-        try (RandomAccessFile raf = new RandomAccessFile(path, "r")) {
+        try (RandomAccessFile raf = new RandomAccessFile(path, "r");
+                FileInputStream fis = new FileInputStream(raf.getFD());
+                InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
+                BufferedReader br = new BufferedReader(isr)) {
 
             long currentFileSize = raf.length();
 
@@ -39,7 +42,7 @@ public class FilterHandler {
             String line;
 
 
-            while ((line = raf.readLine()) != null) {
+            while ((line = br.readLine()) != null) {
 
                 Set<String> filterOpts = config.getFilterOpts().get(pathSymbol);
                 if (filterOpts != null) {
