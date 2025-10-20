@@ -27,6 +27,12 @@ public class FilterHandler {
 
         try (RandomAccessFile raf = new RandomAccessFile(path, "r")) {
 
+            long currentFileSize = raf.length();
+
+            if (startPosition > currentFileSize) {
+                startPosition = 0L;
+            }
+
             //move the file pointer to the last point
             raf.seek(startPosition);
 
