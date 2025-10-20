@@ -4,9 +4,6 @@ import config.AlfaConfig;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 
 public class FilterHandler {
@@ -28,7 +25,7 @@ public class FilterHandler {
         Map<String, Long> positions = config.getLastReadPositions();
         long startPosition = positions.getOrDefault(pathSymbol, 0L);
 
-        try (RandomAccessFile raf = new RandomAccessFile(path, "r")) { // 'r' 모드 사용
+        try (RandomAccessFile raf = new RandomAccessFile(path, "r")) {
 
             //move the file pointer to the last point
             raf.seek(startPosition);

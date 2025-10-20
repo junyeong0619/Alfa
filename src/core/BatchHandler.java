@@ -55,7 +55,6 @@ public class BatchHandler {
      * @param onCompleteCallback Callback to run on completion (e.g., update AlfaAgent's state).
      */
     public void agentOn(Integer runTime, boolean completeMessage, Runnable onCompleteCallback) {
-        // 1. Validation
         if (runTime == null || runTime <= 0) {
             System.err.println("[AlfaAgent] Error: 'runTime' must be a positive integer.");
             return;
@@ -63,18 +62,15 @@ public class BatchHandler {
 
         System.out.println("[AlfaAgent] Starting execution for " + runTime + " seconds...");
 
-        // 2. Start periodic batch processing.
         startBatchProcessing();
 
-        // 3. Schedule the stop task to run after 'runTime' seconds.
         Runnable stopTask = () -> {
-            stopBatchProcessing(); // Shuts down the scheduler.
+            stopBatchProcessing();
 
             if (completeMessage) {
                 System.out.println("[AlfaAgent] Completed execution after " + runTime + " seconds and stopping.");
             }
 
-            // 4. Execute the callback (e.g., to update AlfaAgent's isRunning state)
             if (onCompleteCallback != null) {
                 onCompleteCallback.run();
             }

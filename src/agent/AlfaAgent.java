@@ -29,11 +29,11 @@ public class AlfaAgent {
         }
         this.config = config;
 
-        // 1. Initialize PathHandler
+        //  Initialize PathHandler
         this.pathHandler = new PathHandler(this.config);
-        // 2. Initialize ThreadHandler (Runnable tasks)
+        //  Initialize ThreadHandler (Runnable tasks)
         this.threadHandler = new ThreadHandler(this.config);
-        // 3. Initialize BatchHandler (Scheduler)
+        // Initialize BatchHandler (Scheduler)
         this.batchHandler = new BatchHandler(this.threadHandler, this.config);
     }
 
@@ -49,15 +49,15 @@ public class AlfaAgent {
 
         try {
             System.out.println("[AlfaAgent] Starting path verification...");
-            pathHandler.verifyAllPaths(); // 1. Validate file paths
+            pathHandler.verifyAllPaths();
             System.out.println("[AlfaAgent] Path verification complete.");
         } catch (RuntimeException e) {
             System.err.println("[AlfaAgent] Path verification failed: " + e.getMessage());
-            return; // Do not start
+            return;
         }
 
         System.out.println("[AlfaAgent] Starting agent (indefinite execution)...");
-        batchHandler.startBatchProcessing(); // 2. Start batch processing
+        batchHandler.startBatchProcessing();
         isRunning = true;
     }
 
@@ -78,16 +78,14 @@ public class AlfaAgent {
             System.out.println("[AlfaAgent] Path verification complete.");
         } catch (RuntimeException e) {
             System.err.println("[AlfaAgent] Path verification failed: " + e.getMessage());
-            return; // Do not start
+            return;
         }
 
-        // 2. Define a callback to set 'isRunning' to false upon stopping
         Runnable onStopCallback = () -> {
             this.isRunning = false;
             System.out.println("[AlfaAgent] Auto-stop task complete.");
         };
 
-        // 3. Call BatchHandler's agentOn (with callback)
         batchHandler.agentOn(durationInSeconds, true, onStopCallback);
         isRunning = true; // Considered 'running' once agentOn is called
     }
