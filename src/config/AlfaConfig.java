@@ -14,17 +14,27 @@ public class AlfaConfig {
     // default batch time is 20 seconds.
     private int batchTime = 20;
 
+    // Default thread pool size is 10.
+    private int threadPoolSize = 10;
+
     // from absPaths ex) <"customer", "/main/customer.log"> path symbols like customer will be collected in it.
     private final  Set<String> absPathSymbols = new HashSet<>();
 
     // in FilterHandler it will be used by filtering log.
     private Map<String,Set<String>> filterOpts;
 
-    public AlfaConfig(AlfaResultHandler resultHandler, Map<String, String> absPaths, Map<String, Set<String>> filterOpts) {
+    public AlfaConfig(AlfaResultHandler resultHandler, Map<String, String> absPaths,
+                      Map<String, Set<String>> filterOpts, Integer batchTime, Integer threadPoolSize) {
         this.resultHandler = resultHandler;
         this.absPaths = absPaths;
         this.absPathSymbols.addAll(absPaths.keySet());
         this.filterOpts = filterOpts;
+        if (batchTime != null) {
+            this.batchTime = batchTime;
+        }
+        if (threadPoolSize != null) {
+            this.threadPoolSize = threadPoolSize;
+        }
     }
 
     public AlfaResultHandler getResultHandler() {
@@ -61,5 +71,18 @@ public class AlfaConfig {
 
     public void setFilterOpts(Map<String, Set<String>> filterOpts) {
         this.filterOpts = filterOpts;
+    }
+
+    public int getThreadPoolSize() {
+        return threadPoolSize;
+    }
+
+    public void setThreadPoolSize(int threadPoolSize) {
+        // A minimum of 1 thread must be guaranteed.
+        if (threadPoolSize <= 0) {
+            this.threadPoolSize = 1;
+        } else {
+            this.threadPoolSize = threadPoolSize;
+        }
     }
 }

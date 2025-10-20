@@ -13,8 +13,10 @@ public class BatchHandler {
     public BatchHandler(ThreadHandler threadHandler, AlfaConfig config) {
         this.threadHandler = threadHandler;
         this.config = config;
-        int poolSize = threadHandler.getRunnableTasks().size();
-        this.scheduler = Executors.newScheduledThreadPool(poolSize > 0 ? poolSize : 1);
+        // Read the pool size from the configuration (default is 10)
+        int poolSize = config.getThreadPoolSize();
+        // Create the thread pool with the size specified in the config
+        this.scheduler = Executors.newScheduledThreadPool(poolSize);
     }
 
     /**
