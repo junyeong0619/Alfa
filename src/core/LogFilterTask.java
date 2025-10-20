@@ -3,7 +3,7 @@ package core;
 import config.AlfaConfig;
 import java.io.IOException;
 
-public class Thread implements Runnable {
+public class LogFilterTask implements Runnable {
 
     private AlfaConfig config;
     private String pathSymbol;
@@ -11,7 +11,7 @@ public class Thread implements Runnable {
     /**
      * Constructor: Receives the config and the path symbol this task is responsible for.
      */
-    public Thread(AlfaConfig config, String pathSymbol) {
+    public LogFilterTask(AlfaConfig config, String pathSymbol) {
         this.config = config;
         this.pathSymbol = pathSymbol;
     }
