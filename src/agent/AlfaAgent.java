@@ -5,6 +5,8 @@ import core.BatchHandler;
 import core.PathHandler;
 import core.ThreadHandler;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * User can use Alfa by this class
  */
@@ -14,6 +16,8 @@ public class AlfaAgent {
     private PathHandler pathHandler;
     private ThreadHandler threadHandler;
     private BatchHandler batchHandler;
+    private AlfaNotifier alfaNotifier;
+    private Thread notifierThread;
 
     //this field can be approached by several threads
     private volatile boolean isRunning = false;
@@ -56,6 +60,13 @@ public class AlfaAgent {
             return;
         }
 
+        System.out.println("[AlfaAgent] Starting file existence notifier...");
+        alfaNotifier = new AlfaNotifier(this.config, this);
+        notifierThread = new Thread(alfaNotifier);
+        notifierThread.setName("AlfaNotifierThread");
+        notifierThread.setDaemon(true);
+        notifierThread.start();
+
         System.out.println("[AlfaAgent] Initializing tasks and file resources...");
         threadHandler.initializeTasks();
         System.out.println("[AlfaAgent] Initialization complete.");
@@ -85,6 +96,13 @@ public class AlfaAgent {
             return;
         }
 
+        System.out.println("[AlfaAgent] Starting file existence notifier...");
+        alfaNotifier = new AlfaNotifier(this.config, this);
+        notifierThread = new Thread(alfaNotifier);
+        notifierThread.setName("AlfaNotifierThread");
+        notifierThread.setDaemon(true);
+        notifierThread.start();
+
         System.out.println("[AlfaAgent] Initializing tasks and file resources...");
         threadHandler.initializeTasks();
         System.out.println("[AlfaAgent] Initialization complete.");
@@ -107,6 +125,24 @@ public class AlfaAgent {
             return;
         }
         System.out.println("[AlfaAgent] Manually stopping agent...");
+
+        // 1. Notifier 스레드 중지 신호 및 대기
+        if (alfaNotifier != null) {
+            System.out.println("[AlfaAgent] Stopping file existence notifier...");
+            alfaNotifier.stopNotifier();
+        }
+        if (notifierThread != null && notifierThread.isAlive()) {
+            try {
+                notifierThread.interrupt();
+                notifierThread.join(TimeUnit.SECONDS.toMillis(5));
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                System.err.println("[AlfaAgent] Interrupted while waiting for notifier thread to stop.");
+            }
+        }
+        alfaNotifier = null;
+        notifierThread = null;
+
         batchHandler.stopBatchProcessing();
         isRunning = false;
         System.out.println("[AlfaAgent] Agent stop complete.");
