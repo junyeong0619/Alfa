@@ -19,7 +19,6 @@ public class AlfaNotifier implements Runnable {
     private final AlfaAgent agent;
     private final Map<String, Boolean> fileExistenceState;
     private volatile boolean isRunning = true;
-    private final long checkIntervalSeconds = 60;
 
     public AlfaNotifier(AlfaConfig config, AlfaAgent agent) {
         this.config = config;
@@ -47,7 +46,7 @@ public class AlfaNotifier implements Runnable {
         System.out.println("[AlfaNotify] Starting log file monitoring...");
         while (isRunning) {
             try {
-                TimeUnit.SECONDS.sleep(checkIntervalSeconds);
+                TimeUnit.SECONDS.sleep(config.getNotifierInterval());
 
                 Set<String> symbols = config.getAbsPathSymbols();
                 Map<String, String> paths = config.getAbsPaths();

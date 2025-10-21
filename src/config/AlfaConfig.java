@@ -32,9 +32,11 @@ public class AlfaConfig {
 
     private boolean notifierEnabled = true;
 
+    private int notifierInterval = 60;
+
     public AlfaConfig(AlfaResultHandler resultHandler, Map<String, String> absPaths,
                       Map<String, Set<String>> filterOpts, Integer batchTime, Integer threadPoolSize,
-                      Charset fileEncoding, Boolean notifierEnabled) {
+                      Integer notifierInterval,Charset fileEncoding, Boolean notifierEnabled) {
         this.resultHandler = resultHandler;
         this.absPaths = absPaths;
         this.absPathSymbols.addAll(absPaths.keySet());
@@ -51,6 +53,13 @@ public class AlfaConfig {
         if (notifierEnabled != null) {
             this.notifierEnabled = notifierEnabled;
         }
+        if (notifierInterval != null) {
+            this.notifierInterval = notifierInterval;
+        }
+    }
+
+    public int getNotifierInterval() {
+        return notifierInterval;
     }
 
     public Charset getFileEncoding() {
