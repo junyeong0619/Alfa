@@ -23,6 +23,9 @@ public class BatchHandler {
      * Starts the periodic batch processing.
      */
     public void startBatchProcessing() {
+        if(scheduler == null || scheduler.isShutdown()) {
+            scheduler = Executors.newScheduledThreadPool(config.getThreadPoolSize());
+        }
         int batchTime = config.getBatchTime();
         for (Runnable task : threadHandler.getRunnableTasks()) {
             scheduler.scheduleAtFixedRate(task, 0, batchTime, TimeUnit.SECONDS);
@@ -33,8 +36,18 @@ public class BatchHandler {
      * Shuts down the scheduler.
      */
     public void stopBatchProcessing() {
-        if (scheduler != null && !scheduler.isShutdown()) {
+        if (scheduler != null ) {
             scheduler.shutdown();
+            try{
+                if(!scheduler.awaitTermination(5,TimeUnit.SECONDS)){
+                    scheduler.shutdownNow();
+                    scheduler.awaitTermination(5,TimeUnit.SECONDS);
+                }
+            } catch (InterruptedException e) {
+                scheduler.shutdownNow();
+                Thread.currentThread().interrupt();
+            }
+            scheduler = null;
         }
         threadHandler.closeTasks();
     }
@@ -78,6 +91,10 @@ public class BatchHandler {
         };
 
         // Schedule stopTask to run once after 'runTime' seconds.
-        this.scheduler.schedule(stopTask, runTime, TimeUnit.SECONDS);
+        this.scheduler.schedule(()->{
+            Thread stopThread = new Thread(stopTask, "AlfaAgentStopper");
+            stopThread.setDaemon(true);
+            stopThread.start();
+        }, runTime, TimeUnit.SECONDS);
     }
 }
