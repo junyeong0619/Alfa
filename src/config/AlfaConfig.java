@@ -23,7 +23,7 @@ public class AlfaConfig {
 
     // in FilterHandler it will be used by filtering log.
     private Map<String,Set<String>> filterOpts;
-    
+
     private final Map<String, Long> lastReadPositions = new ConcurrentHashMap<>();
 
     public AlfaConfig(AlfaResultHandler resultHandler, Map<String, String> absPaths,
@@ -48,25 +48,16 @@ public class AlfaConfig {
         return resultHandler;
     }
 
-    public void setResultHandler(AlfaResultHandler resultHandler) {
-        this.resultHandler = resultHandler;
-    }
 
     public Map<String, String> getAbsPaths() {
         return absPaths;
     }
 
-    public void setAbsPaths(Map<String, String> absPaths) {
-        this.absPaths = absPaths;
-    }
 
     public int getBatchTime() {
         return batchTime;
     }
 
-    public void setBatchTime(int batchTime) {
-        this.batchTime = batchTime;
-    }
 
     public Set<String> getAbsPathSymbols() {
         return absPathSymbols;
@@ -76,20 +67,9 @@ public class AlfaConfig {
         return filterOpts;
     }
 
-    public void setFilterOpts(Map<String, Set<String>> filterOpts) {
-        this.filterOpts = filterOpts;
-    }
 
     public int getThreadPoolSize() {
         return threadPoolSize;
     }
 
-    public void setThreadPoolSize(int threadPoolSize) {
-        // A minimum of 1 thread must be guaranteed.
-        if (threadPoolSize <= 0) {
-            this.threadPoolSize = 1;
-        } else {
-            this.threadPoolSize = threadPoolSize;
-        }
-    }
 }
