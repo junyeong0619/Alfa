@@ -59,13 +59,14 @@ public class AlfaAgent {
             System.err.println("[AlfaAgent] Path verification failed: " + e.getMessage());
             return;
         }
-
+        if(config.isNotifierEnabled()){
         System.out.println("[AlfaAgent] Starting file existence notifier...");
         alfaNotifier = new AlfaNotifier(this.config, this);
         notifierThread = new Thread(alfaNotifier);
         notifierThread.setName("AlfaNotifierThread");
         notifierThread.setDaemon(true);
         notifierThread.start();
+        }
 
         System.out.println("[AlfaAgent] Initializing tasks and file resources...");
         threadHandler.initializeTasks();
@@ -96,12 +97,14 @@ public class AlfaAgent {
             return;
         }
 
-        System.out.println("[AlfaAgent] Starting file existence notifier...");
-        alfaNotifier = new AlfaNotifier(this.config, this);
-        notifierThread = new Thread(alfaNotifier);
-        notifierThread.setName("AlfaNotifierThread");
-        notifierThread.setDaemon(true);
-        notifierThread.start();
+        if(config.isNotifierEnabled()) {
+            System.out.println("[AlfaAgent] Starting file existence notifier...");
+            alfaNotifier = new AlfaNotifier(this.config, this);
+            notifierThread = new Thread(alfaNotifier);
+            notifierThread.setName("AlfaNotifierThread");
+            notifierThread.setDaemon(true);
+            notifierThread.start();
+        }
 
         System.out.println("[AlfaAgent] Initializing tasks and file resources...");
         threadHandler.initializeTasks();
@@ -126,8 +129,7 @@ public class AlfaAgent {
         }
         System.out.println("[AlfaAgent] Manually stopping agent...");
 
-        // 1. Notifier 스레드 중지 신호 및 대기
-        if (alfaNotifier != null) {
+        if (alfaNotifier != null && config.isNotifierEnabled()) {
             System.out.println("[AlfaAgent] Stopping file existence notifier...");
             alfaNotifier.stopNotifier();
         }

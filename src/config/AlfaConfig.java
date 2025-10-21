@@ -1,5 +1,7 @@
 package config;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -26,8 +28,13 @@ public class AlfaConfig {
 
     private final Map<String, Long> lastReadPositions = new ConcurrentHashMap<>();
 
+    private Charset fileEncoding = StandardCharsets.UTF_8;
+
+    private boolean notifierEnabled = true;
+
     public AlfaConfig(AlfaResultHandler resultHandler, Map<String, String> absPaths,
-                      Map<String, Set<String>> filterOpts, Integer batchTime, Integer threadPoolSize) {
+                      Map<String, Set<String>> filterOpts, Integer batchTime, Integer threadPoolSize,
+                      Charset fileEncoding, Boolean notifierEnabled) {
         this.resultHandler = resultHandler;
         this.absPaths = absPaths;
         this.absPathSymbols.addAll(absPaths.keySet());
@@ -38,6 +45,24 @@ public class AlfaConfig {
         if (threadPoolSize != null) {
             this.threadPoolSize = threadPoolSize;
         }
+        if (fileEncoding != null) {
+            this.fileEncoding = fileEncoding;
+        }
+        if (notifierEnabled != null) {
+            this.notifierEnabled = notifierEnabled;
+        }
+    }
+
+    public Charset getFileEncoding() {
+        return fileEncoding;
+    }
+
+    public boolean isNotifierEnabled() {
+        return notifierEnabled;
+    }
+
+    public void setNotifierEnabled(boolean notifierEnabled) {
+        this.notifierEnabled = notifierEnabled;
     }
 
     public Map<String, Long> getLastReadPositions() {

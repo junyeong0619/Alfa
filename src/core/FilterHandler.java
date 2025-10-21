@@ -31,7 +31,7 @@ public class FilterHandler {
 
         this.raf = new RandomAccessFile(path, "r");
         FileInputStream fis = new FileInputStream(raf.getFD());
-        InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
+        InputStreamReader isr = new InputStreamReader(fis, config.getFileEncoding());
         this.br = new BufferedReader(isr);
     }
 

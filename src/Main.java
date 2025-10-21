@@ -65,7 +65,7 @@ public class Main {
             filters.put("APP_" + i, keywords);
         }
 
-        AlfaConfig config = new AlfaConfig(new MyTestHandler(), paths, filters, 5, 10);
+        AlfaConfig config = new AlfaConfig(new MyTestHandler(), paths, filters, 5, 10,null,null);
         AlfaAgent agent = new AlfaAgent(config);
 
         // 4. 에이전트 시작
