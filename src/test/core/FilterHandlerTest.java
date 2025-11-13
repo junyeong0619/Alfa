@@ -285,4 +285,54 @@ public class FilterHandlerTest {
         assertEquals(fileSize, testConfig.getLastReadPositions().get("TEST_LOG_EUCKR"));
         assertTrue(mockResultHandler.errors.isEmpty());
     }
+
+    /**
+     * New Test: Test with a complex regular expression.
+     */
+    @Test
+    @DisplayName("Regex Functionality: Should filter logs based on a complex regular expression")
+    void doFilter_ComplexRegex_ShouldFilterMatchingLines() throws IOException {
+        filterHandler.close();
+
+        Map<String, String> paths = new HashMap<>();
+        paths.put("REGEX_LOG", tempLogFile.toString());
+        Map<String, Set<String>> filters = new HashMap<>();
+        // Regex to match log levels (INFO, WARN, ERROR, etc.) followed by a specific ID format (ID: followed by 3 or 4 digits)
+        final String complexRegex = "\\[(INFO|WARN|ERROR)\\] .* ID: \\d{3,4}";
+        filters.put("REGEX_LOG", Set.of(complexRegex));
+
+        testConfig = new AlfaConfig(mockResultHandler, paths, filters,
+                null, null, null, StandardCharsets.UTF_8, false);
+        filterHandler = new FilterHandler(testConfig, "REGEX_LOG");
+        testConfig.getLastReadPositions().remove("REGEX_LOG");
+
+        List<String> lines = Arrays.asList(
+                "[INFO] Standard message. ID: 123",        // Match: INFO + 3 digits
+                "[DEBUG] Debug details. ID: 56789",        // No Match: DEBUG, 5 digits
+                "[WARN] Alert message. ID: 9999",         // Match: WARN + 4 digits
+                "[ERROR] Critical failure.",              // No Match: Missing ID part
+                "[INFO] Another message. ID: 001"         // Match: INFO + 3 digits
+        );
+        Files.write(tempLogFile, lines, StandardCharsets.UTF_8, StandardOpenOption.APPEND);
+        long fileSize = Files.size(tempLogFile);
+
+        List<String> filteredResult = filterHandler.doFilter();
+
+        // Assert: 3 matching lines
+        assertEquals(3, filteredResult.size(), "3 lines should be filtered by the complex regex.");
+        assertEquals(3, mockResultHandler.filteredLogs.size());
+
+        // Check if the recorded keyword is the complex regex itself
+        for(String keyword : mockResultHandler.keywordsFound) {
+            assertEquals(complexRegex, keyword);
+        }
+
+        assertEquals(lines.get(0), filteredResult.get(0));
+        assertEquals(lines.get(2), filteredResult.get(1));
+        assertEquals(lines.get(4), filteredResult.get(2));
+
+        assertEquals(fileSize, testConfig.getLastReadPositions().get("REGEX_LOG"));
+        assertTrue(mockResultHandler.errors.isEmpty());
+    }
+
 }
