@@ -1,4 +1,4 @@
-package config;
+package main.config;
 
 import java.util.List;
 

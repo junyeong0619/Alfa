@@ -1,6 +1,6 @@
-package core;
+package main.core;
 
-import config.AlfaConfig;
+import main.config.AlfaConfig;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,7 +9,7 @@ import java.util.Set;
 
 public class ThreadHandler {
 
-    // The threads list holds core.Thread (Runnable) objects.
+    // The threads list holds main.core.Thread (Runnable) objects.
     private List<LogFilterTask> tasks = new ArrayList<>();
     private AlfaConfig config;
 

@@ -1,11 +1,10 @@
-package core;
+package main.core;
 
-import config.AlfaConfig;
+import main.config.AlfaConfig;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
-import java.util.Set;
 
 public class PathHandler {
 

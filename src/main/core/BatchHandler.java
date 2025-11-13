@@ -1,6 +1,6 @@
-package core;
+package main.core;
 
-import config.AlfaConfig;
+import main.config.AlfaConfig;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -15,7 +15,7 @@ public class BatchHandler {
         this.config = config;
         // Read the pool size from the configuration (default is 10)
         int poolSize = config.getThreadPoolSize();
-        // Create the thread pool with the size specified in the config
+        // Create the thread pool with the size specified in the main.config
         this.scheduler = Executors.newScheduledThreadPool(poolSize);
     }
 
@@ -54,7 +54,7 @@ public class BatchHandler {
 
     /**
      * [Overloaded method]
-     * Runs the agent for a specified duration (in seconds) and then stops automatically.
+     * Runs the main.agent for a specified duration (in seconds) and then stops automatically.
      */
     public void agentOn(Integer runTime, boolean completeMessage) {
         // Pass null for the callback to maintain original behavior
@@ -63,7 +63,7 @@ public class BatchHandler {
 
     /**
      * [New method with callback]
-     * Runs the agent for a specified duration, then executes a callback upon completion.
+     * Runs the main.agent for a specified duration, then executes a callback upon completion.
      * @param runTime The execution duration in seconds.
      * @param completeMessage Whether to print a completion message.
      * @param onCompleteCallback Callback to run on completion (e.g., update AlfaAgent's state).

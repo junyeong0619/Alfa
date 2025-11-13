@@ -1,9 +1,8 @@
-package core;
+package main.core;
 
-import config.AlfaConfig;
+import main.config.AlfaConfig;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class FilterHandler {

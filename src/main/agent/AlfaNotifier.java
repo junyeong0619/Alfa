@@ -1,6 +1,6 @@
-package agent; // agent 패키지에 넣는 것을 추천합니다.
+package main.agent; // main.agent 패키지에 넣는 것을 추천합니다.
 
-import config.AlfaConfig;
+import main.config.AlfaConfig;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;

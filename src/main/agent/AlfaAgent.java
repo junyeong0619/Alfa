@@ -1,9 +1,9 @@
-package agent;
+package main.agent;
 
-import config.AlfaConfig;
-import core.BatchHandler;
-import core.PathHandler;
-import core.ThreadHandler;
+import main.config.AlfaConfig;
+import main.core.BatchHandler;
+import main.core.PathHandler;
+import main.core.ThreadHandler;
 
 import java.util.concurrent.TimeUnit;
 
@@ -24,8 +24,8 @@ public class AlfaAgent {
 
     /**
      * Create AlfaAgent
-     * Initializes all core components in the constructor.
-     * @param config All configurations required to run the agent.
+     * Initializes all main.core components in the constructor.
+     * @param config All configurations required to run the main.agent.
      */
     public AlfaAgent(AlfaConfig config) {
         if (config == null || config.getResultHandler() == null) {
@@ -42,7 +42,7 @@ public class AlfaAgent {
     }
 
     /**
-     * Starts the agent. (Indefinite execution)
+     * Starts the main.agent. (Indefinite execution)
      * Throws RuntimeException if path verification fails.
      */
     public void start() {
@@ -72,13 +72,13 @@ public class AlfaAgent {
         threadHandler.initializeTasks();
         System.out.println("[AlfaAgent] Initialization complete.");
 
-        System.out.println("[AlfaAgent] Starting agent (indefinite execution)...");
+        System.out.println("[AlfaAgent] Starting main.agent (indefinite execution)...");
         batchHandler.startBatchProcessing();
         isRunning = true;
     }
 
     /**
-     * Starts the agent for a specified duration (in seconds) and then automatically stops.
+     * Starts the main.agent for a specified duration (in seconds) and then automatically stops.
      * Does not start if path verification fails.
      * @param durationInSeconds The execution duration in seconds.
      */
@@ -120,14 +120,14 @@ public class AlfaAgent {
     }
 
     /**
-     * Manually stops the running agent.
+     * Manually stops the running main.agent.
      */
     public void stop() {
         if (!isRunning) {
             System.out.println("[AlfaAgent] Agent is not running.");
             return;
         }
-        System.out.println("[AlfaAgent] Manually stopping agent...");
+        System.out.println("[AlfaAgent] Manually stopping main.agent...");
 
         if (alfaNotifier != null && config.isNotifierEnabled()) {
             System.out.println("[AlfaAgent] Stopping file existence notifier...");
@@ -151,7 +151,7 @@ public class AlfaAgent {
     }
 
     /**
-     * Returns the current running state of the agent.
+     * Returns the current running state of the main.agent.
      * @return true if running
      */
     public boolean isRunning() {

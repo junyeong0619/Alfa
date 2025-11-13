@@ -16,7 +16,7 @@ Alfa Agent를 사용하려면 먼저 **결과 핸들러**를 구현하고 \*\*�
 필터링된 로그가 발견되었을 때 수행할 사용자 정의 로직을 정의합니다. `onLogFiltered` 메서드를 반드시 구현해야 합니다.
 
 ```java
-import config.AlfaResultHandler;
+import main.config.AlfaResultHandler;
 
 public class MyLogHandler implements AlfaResultHandler {
 
@@ -26,7 +26,7 @@ public class MyLogHandler implements AlfaResultHandler {
         // 예: DB에 저장, 알림 전송, 콘솔 출력 등
         System.out.println("[알림] 키워드: " + keyword + " | 로그: " + logLine);
     }
-    
+
     // onBatchComplete는 선택 사항입니다.
     // @Override
     // public void onBatchComplete(List<String> filteredLines) { ... }
@@ -38,28 +38,41 @@ public class MyLogHandler implements AlfaResultHandler {
 로그 파일의 경로, 필터링 옵션, 실행 주기 등을 정의합니다.
 
 ```java
-import config.AlfaConfig;
+import main.config.AlfaConfig;
+
 import java.util.*;
 
 // 1. 결과 핸들러 생성
 AlfaResultHandler myHandler = new MyLogHandler();
 
-// 2. 관리할 로그 파일 경로 정의
-Map<String, String> paths = new HashMap<>();
-paths.put("APP_LOG", "/var/log/app.log");
-paths.put("SYS_LOG", "/var/log/system.log");
+        // 2. 관리할 로그 파일 경로 정의
+        Map<String, String> paths = new HashMap<>();
+paths.
 
-// 3. 파일별 필터 옵션(키워드) 정의
-Map<String, Set<String>> filters = new HashMap<>();
-filters.put("APP_LOG", Set.of("ERROR", "FATAL")); // app.log에서 "ERROR" 또는 "FATAL" 검색
-filters.put("SYS_LOG", Set.of("DENIED"));         // system.log에서 "DENIED" 검색
+        put("APP_LOG","/var/log/app.log");
+paths.
 
-// 4. AlfaConfig 객체 생성 (핸들러, 경로, 필터 옵션 필수)
-AlfaConfig config = new AlfaConfig(myHandler, paths, filters, null, null);
+        put("SYS_LOG","/var/log/system.log");
+
+        // 3. 파일별 필터 옵션(키워드) 정의
+        Map<String, Set<String>> filters = new HashMap<>();
+filters.
+
+        put("APP_LOG",Set.of("ERROR", "FATAL")); // app.log에서 "ERROR" 또는 "FATAL" 검색
+        filters.
+
+        put("SYS_LOG",Set.of("DENIED"));         // system.log에서 "DENIED" 검색
+
+        // 4. AlfaConfig 객체 생성 (핸들러, 경로, 필터 옵션 필수)
+        AlfaConfig config = new AlfaConfig(myHandler, paths, filters, null, null);
 
 // 5. 선택적 설정
-config.setBatchTime(10);        // 배치 실행 주기: 10초마다 (기본값: 20초)
-config.setThreadPoolSize(5);    // 작업 스레드 풀 크기: 5개 (기본값: 10개)
+config.
+
+        setBatchTime(10);        // 배치 실행 주기: 10초마다 (기본값: 20초)
+config.
+
+        setThreadPoolSize(5);    // 작업 스레드 풀 크기: 5개 (기본값: 10개)
 ```
 
 -----
@@ -73,9 +86,10 @@ config.setThreadPoolSize(5);    // 작업 스레드 풀 크기: 5개 (기본값:
 생성자에 `AlfaConfig` 객체를 전달합니다.
 
 ```java
-import agent.AlfaAgent;
-// ... config 객체가 준비되었다고 가정
-AlfaAgent agent = new AlfaAgent(config);
+import main.agent.AlfaAgent;
+
+// ... main.config 객체가 준비되었다고 가정
+AlfaAgent main.agent = new AlfaAgent(main.config);
 ```
 
 #### 2.2. 에이전트 시작
@@ -84,8 +98,8 @@ AlfaAgent agent = new AlfaAgent(config);
 
 | 메서드 | 설명 |
 | :--- | :--- |
-| `agent.start()` | 에이전트를 **무기한** 실행합니다. `stop()` 메서드를 명시적으로 호출할 때까지 배치 처리를 계속합니다. |
-| `agent.start(int durationInSeconds)` | 에이전트를 지정된 시간(**초 단위**) 동안 실행한 후, 스케줄러를 자동으로 종료합니다. |
+| `main.agent.start()` | 에이전트를 **무기한** 실행합니다. `stop()` 메서드를 명시적으로 호출할 때까지 배치 처리를 계속합니다. |
+| `main.agent.start(int durationInSeconds)` | 에이전트를 지정된 시간(**초 단위**) 동안 실행한 후, 스케줄러를 자동으로 종료합니다. |
 
 **주의:** 실행 전, `PathHandler`를 통해 모든 설정 경로의 존재 여부를 검증합니다. 경로가 존재하지 않으면 `RuntimeException`이 발생하며 에이전트는 시작되지 않습니다.
 
@@ -94,7 +108,7 @@ AlfaAgent agent = new AlfaAgent(config);
 `start()`로 무기한 실행 중인 에이전트를 수동으로 중지할 때 사용합니다.
 
 ```java
-agent.stop();
+main.agent.stop();
 ```
 
 
@@ -110,12 +124,12 @@ Alfa Agent는 `.jar` 파일 형태의 라이브러리로 패키징되어 다른 
 
 #### 3.1. .jar 파일 프로젝트에 추가하기
 
-생성된 `alfa-agent-1.0.jar` (또는 유사한 이름의) 파일을 애플리케이션 프로젝트에 추가해야 합니다.
+생성된 `alfa-main.agent-1.0.jar` (또는 유사한 이름의) 파일을 애플리케이션 프로젝트에 추가해야 합니다.
 
 **방법 1: IDE에서 직접 추가 (예: IntelliJ)**
 
 1.  프로젝트 루트에 `lib` 폴더를 만듭니다.
-2.  `alfa-agent-1.0.jar` 파일을 `lib` 폴더에 복사합니다.
+2.  `alfa-main.agent-1.0.jar` 파일을 `lib` 폴더에 복사합니다.
 3.  IntelliJ의 프로젝트 뷰에서 `.jar` 파일을 우클릭한 뒤, \*\*"Add as Library..."\*\*를 선택합니다.
 
 **방법 2: 빌드 도구 사용 (예: Gradle)**
@@ -127,12 +141,12 @@ Alfa Agent는 `.jar` 파일 형태의 라이브러리로 패키징되어 다른 
     ```groovy
     dependencies {
         // ... 다른 의존성들
-        implementation files('libs/alfa-agent-1.0.jar')
+        implementation files('libs/alfa-main.agent-1.0.jar')
     }
     ```
 
 #### 3.2. 라이브러리 사용 예시
 
-라이브러리가 추가되면, 애플리케이션의 `Main` 클래스 등에서 `AlfaAgent`를 직접 임포트하여 사용할 수 있습니다.
+라이브러리가 추가되면, 애플리케이션의 `main.Main` 클래스 등에서 `AlfaAgent`를 직접 임포트하여 사용할 수 있습니다.
 
 

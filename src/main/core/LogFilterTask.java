@@ -1,7 +1,7 @@
-package core;
+package main.core;
 
-import config.AlfaConfig;
-import java.io.IOException;
+import main.config.AlfaConfig;
+
 import java.util.List;
 
 public class LogFilterTask implements Runnable {
@@ -11,7 +11,7 @@ public class LogFilterTask implements Runnable {
     private FilterHandler filterHandler;
 
     /**
-     * Constructor: Receives the config and the path symbol this task is responsible for.
+     * Constructor: Receives the main.config and the path symbol this task is responsible for.
      */
     public LogFilterTask(AlfaConfig config, String pathSymbol, FilterHandler filterHandler) {
         this.config = config;
