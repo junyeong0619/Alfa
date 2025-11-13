@@ -29,12 +29,9 @@ public class Main {
 
     public static void main(String[] args) {
 
-        // 1. [중요] 로그 디렉토리 경로를 '절대 경로'로 명확하게 지정합니다.
         String logDir = "../alfa_test/test-logs/";
         int numFiles = 10;
 
-        // 2. [핵심] 에이전트 시작 전에 로그 파일을 미리 생성합니다.
-        // 이 로직 덕분에 PathHandler가 "파일이 없다"는 오류를 발생시키지 않습니다.
         try {
             System.out.println("지정된 경로에 로그 파일이 없으면 새로 생성합니다...");
             // 로그 디렉토리 생성
