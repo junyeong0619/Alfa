@@ -4,6 +4,8 @@ import main.config.AlfaConfig;
 
 import java.io.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FilterHandler {
     private AlfaConfig config;
@@ -12,6 +14,8 @@ public class FilterHandler {
 
     private RandomAccessFile raf;
     private BufferedReader br;
+
+    private Set<Pattern> compiledFilterPatterns;
 
     /**
      * Constructor: Opens file resources when the FilterHandler is created.
@@ -32,6 +36,20 @@ public class FilterHandler {
         FileInputStream fis = new FileInputStream(raf.getFD());
         InputStreamReader isr = new InputStreamReader(fis, config.getFileEncoding());
         this.br = new BufferedReader(isr);
+
+        Set<String> filterOpts = config.getFilterOpts().get(pathSymbol);
+        if (filterOpts != null) {
+            this.compiledFilterPatterns = new HashSet<>();
+            for (String regex : filterOpts) {
+                try {
+                    this.compiledFilterPatterns.add(Pattern.compile(regex));
+                } catch (Exception e) {
+                    config.getResultHandler().onError(pathSymbol, new IllegalArgumentException("Invalid regex filter: " + regex, e));
+                    close();
+                    throw new IOException("Failed to initialize FilterHandler due to invalid regex pattern: " + regex);
+                }
+            }
+        }
     }
 
 
@@ -55,12 +73,12 @@ public class FilterHandler {
 
             String line;
             while ((line = br.readLine()) != null) {
-                Set<String> filterOpts = config.getFilterOpts().get(pathSymbol);
-                if (filterOpts != null) {
-                    for (String option : filterOpts) {
-                        if (line.contains(option)) {
+                if (compiledFilterPatterns != null) {
+                    for (Pattern pattern : compiledFilterPatterns) {
+                        Matcher matcher = pattern.matcher(line);
+                        if (matcher.find()) {
                             filteredLines.add(line);
-                            config.getResultHandler().onLogFiltered(line, option);
+                            config.getResultHandler().onLogFiltered(line, pattern.pattern());
                             break;
                         }
                     }
